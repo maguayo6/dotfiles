@@ -14,6 +14,7 @@ apt update && apt upgrade -y
 # Install binaries
 apt install build-essential
 apt install cmake make
+apt install docker docker-compose docker-buildx
 apt install gcc g++
 apt install gdb
 apt install git
@@ -33,3 +34,9 @@ snap install code
 	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
 	&& sudo apt update \
 	&& sudo apt install gh -y
+
+# Install oh-my-zsh
+sh -c "$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+# Remove outdated pkg versions
+apt autoremove
