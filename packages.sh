@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Validate input
+if [ "$#" -ne 2 ]; then
+	echo "Usage: $0 <package_manager: apt, dnf...>"
+	exit 1
+fi
+$MANAGER=$1
+echo "Installing packages from $MANAGER";
+
 # Install cli tools
 
 # Ask for admin password upfront
@@ -9,34 +17,41 @@ sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Update and upgrade already-installed stuff
-apt update && apt upgrade -y
+$MANAGER update && $MANAGER upgrade -y
 
 # Install binaries
-apt install build-essential
-apt install cmake make
-apt install docker docker-compose docker-buildx
-apt install gcc g++
-apt install gdb
-apt install git
-apt install openssh openssl
-apt install stow
-apt install tree
-apt install zsh zsh-autosuggestions
+$MANAGER install build-essential
+$MANAGER install cmake make
+$MANAGER install docker docker-compose docker-buildx
+$MANAGER install gcc g++
+$MANAGER install gdb
+$MANAGER install git
+$MANAGER install openssh openssl
+$MANAGER install stow
+$MANAGER install tree
+$MANAGER install zsh
 
 # Install snaps
-snap install code
+if [ $MANAGER -e "apt" ]; then
+	snap install code
+else if [ $MANAGER -e "dnf" ]; then
+	echo "use a different manager"
+fi
 
 # Install gh
-(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
-	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-	&& sudo apt update \
-	&& sudo apt install gh -y
+if [ $MANAGER -e "apt" ]; then
+	(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+		&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+		&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+		&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+		&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+		&& sudo apt update \
+		&& sudo apt install gh -y
+else if [ $MANAGER -e "dnf" ]; then
+	dnf install gh --repo gh-cli
+fi
 
-# Install oh-my-zsh
-sh -c "$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# Install oh-my-zsh --unattended since running from automated install script
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-# Remove outdated pkg versions
-apt autoremove
+
