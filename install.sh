@@ -3,6 +3,9 @@
 # Install apt packages
 source packages.sh
 
+stow git
+stow zsh
+
 # Change default shell
 sudo chsh -s $(which zsh)
 
