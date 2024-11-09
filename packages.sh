@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 # Validate input
 if [ "$#" -ne 2 ]; then
@@ -30,6 +30,7 @@ $MANAGER install git
 $MANAGER install stow
 # $MANAGER install tree
 $MANAGER install zsh
+$MANAGER install fontconfig  # For automatic Nerd Font install
 
 # Install snaps
 if [ $MANAGER -e "apt" ]; then
@@ -53,5 +54,8 @@ fi
 
 # Install oh-my-zsh --unattended since running from automated install script
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+# Install powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
 
