@@ -1,4 +1,4 @@
-#!/user/bin/env bash
+#!/usr/bin/bash
 
 # Install apt packages
 source packages.sh
