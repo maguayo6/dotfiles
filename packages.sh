@@ -20,15 +20,15 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 $MANAGER update && $MANAGER upgrade -y
 
 # Install binaries
-$MANAGER install build-essential
-$MANAGER install cmake make
-$MANAGER install docker docker-compose docker-buildx
-$MANAGER install gcc g++
-$MANAGER install gdb
+# $MANAGER install build-essential
+# $MANAGER install cmake make
+# $MANAGER install docker docker-compose docker-buildx
+# $MANAGER install gcc g++
+# $MANAGER install gdb
 $MANAGER install git
-$MANAGER install openssh openssl
+# $MANAGER install openssh openssl
 $MANAGER install stow
-$MANAGER install tree
+# $MANAGER install tree
 $MANAGER install zsh
 
 # Install snaps
