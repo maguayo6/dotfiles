@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/matchapowder/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -79,8 +79,11 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
+    zsh-autosuggestions
     zsh-syntax-highlighting
-    zsh-z
+    you-should-use
+    zsh-bat
+    z
     command-not-found
     )
 
@@ -118,4 +121,4 @@ alias bashconfig="code ~/.bashrc"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export LS_COLORS=$LS_COLORS:'ow=4;34';
-export PATH=/home/matchapowder/.local/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
