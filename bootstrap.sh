@@ -34,6 +34,7 @@ main() {
   pkg_install "${CORE_PKGS[@]}"
   [ "$OS" = linux ] && pkg_install "${LINUX_PKGS[@]}"
   pkg_install_optional "${NICE_PKGS[@]}"
+  [ "$OS" = linux ] && pkg_install_optional "${LINUX_CLIP_PKGS[@]}"
 
   install_omz
   install_omz_extras

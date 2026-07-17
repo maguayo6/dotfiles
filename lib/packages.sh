@@ -25,3 +25,7 @@ LINUX_PKGS=(fontconfig)
 
 # Nice-to-have — best-effort; a failure here only warns (availability varies by distro).
 NICE_PKGS=(fzf bat)
+
+# Linux clipboard tools for tmux copy -> system clipboard (macOS ships pbcopy).
+# Both installed so either X11 (xclip) or Wayland (wl-copy) sessions work.
+LINUX_CLIP_PKGS=(xclip wl-clipboard)
