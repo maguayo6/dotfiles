@@ -41,10 +41,24 @@ that the tracked configs pull in automatically (scaffolded on first run):
 
 | File | Holds | Wired via |
 |------|-------|-----------|
-| `~/.gitconfig.local` | your git `name` / `email` | `include` in `git/.gitconfig` |
+| `~/.gitconfig.local` | default git `name`/`email` + SSH key (work) | `include` in `git/.gitconfig` |
+| `~/.gitconfig-personal.local` | personal git `name`/`email` + SSH key | `includeIf` (personal folders) in `git/.gitconfig` |
 | `~/.zshrc.local` | per-host `PATH`, work tools, secrets | sourced near the end of `zsh/.zshrc` |
 
 Edit `~/.gitconfig.local` after the first run to set your identity.
+
+## Multiple git accounts (work + personal)
+
+Both the commit identity **and** the SSH key are chosen automatically by a repo's
+folder — no per-repo setup, SSH host aliases, or remote-URL edits:
+
+- **`~/dotfiles` and `~/personal/*`** → personal account (`~/.gitconfig-personal.local`)
+- **everything else** (e.g. `~/neros/*`) → default/work account (`~/.gitconfig.local`)
+
+It works via `includeIf "gitdir:…"` in `git/.gitconfig`; each identity file also sets
+`core.sshCommand = ssh -i ~/.ssh/<key> -o IdentitiesOnly=yes`, so a plain
+`git@github.com:…` clone authenticates with the right key based on where it lives.
+Keep personal repos under `~/dotfiles` / `~/personal/`; SSH keys stay in `~/.ssh/` (never tracked).
 
 ## One manual step (per machine)
 

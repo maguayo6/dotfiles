@@ -124,11 +124,28 @@ scaffold_locals() {
   if [ ! -f "$HOME/.gitconfig.local" ]; then
     cat > "$HOME/.gitconfig.local" <<'EOF'
 # Machine-local git identity — not tracked. Fill in your details.
+# DEFAULT identity for all repos. For a second (e.g. work) account, uncomment
+# core.sshCommand to pin its SSH key.
 [user]
 	name = Your Name
 	email = you@example.com
+#[core]
+#	sshCommand = ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes
 EOF
     warn "created ~/.gitconfig.local — edit it to set your git name/email"
+  fi
+  if [ ! -f "$HOME/.gitconfig-personal.local" ]; then
+    cat > "$HOME/.gitconfig-personal.local" <<'EOF'
+# Machine-local PERSONAL identity + SSH key — not tracked. Applied in personal
+# repos (~/dotfiles, ~/personal/*) via the includeIf blocks in ~/.gitconfig.
+# Fill in + uncomment only if you use a separate personal git account.
+#[user]
+#	name = Your Name
+#	email = you@personal.example
+#[core]
+#	sshCommand = ssh -i ~/.ssh/id_personal -o IdentitiesOnly=yes
+EOF
+    ok "created ~/.gitconfig-personal.local stub"
   fi
   if [ ! -f "$HOME/.zshrc.local" ]; then
     printf '%s\n' '# Machine-local zsh config — not tracked. Per-host PATH, tools, secrets.' \

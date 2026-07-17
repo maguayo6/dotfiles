@@ -1,6 +1,12 @@
-# Shared git config (tracked). Personal identity lives in ~/.gitconfig.local
-# (git-ignored; scaffolded by bootstrap.sh) and is pulled in via the include below.
-[include]
-	path = ~/.gitconfig.local
+# Shared git config (tracked). Identity + per-account SSH key are chosen by the
+# repo's directory via the includes below. Details live in machine-local files
+# (~/.gitconfig.local = work default, ~/.gitconfig-personal.local = personal),
+# both git-ignored and scaffolded by bootstrap.sh. See README.md.
 [init]
 	defaultBranch = main
+[include]
+	path = ~/.gitconfig.local              # default identity + SSH key (work)
+[includeIf "gitdir:~/dotfiles/"]
+	path = ~/.gitconfig-personal.local     # personal identity + key for the dotfiles repo
+[includeIf "gitdir:~/personal/"]
+	path = ~/.gitconfig-personal.local     # ...and future personal repos under ~/personal/
