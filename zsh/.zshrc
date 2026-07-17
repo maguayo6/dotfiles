@@ -67,7 +67,7 @@ COMPLETION_WAITING_DOTS="true"
 # "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
 # or set a custom format using the strftime function format specifications,
 # see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
+HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -84,8 +84,11 @@ plugins=(
     you-should-use
     zsh-bat
     z
-    command-not-found
+    colored-man-pages
     )
+# command-not-found is Linux-only (uses the distro cnf database; on macOS it
+# needs the homebrew-command-not-found tap, so skip it there to avoid a no-op/warn)
+[[ "$OSTYPE" == linux* ]] && plugins+=(command-not-found)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -112,13 +115,33 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="code ~/.zshrc"
-alias ohmyzsh="code ~/.oh-my-zsh"
-alias zshp10k="code ~/.p10k.zsh"
-alias bashconfig="code ~/.bashrc"
+alias zshconfig='${EDITOR:-code} ~/.zshrc'
+alias ohmyzsh='${EDITOR:-code} ~/.oh-my-zsh'
+alias zshp10k='${EDITOR:-code} ~/.p10k.zsh'
+alias bashconfig='${EDITOR:-code} ~/.bashrc'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export LS_COLORS=$LS_COLORS:'ow=4;34';
 export PATH=$HOME/.local/bin:$PATH
+
+# machine-local overrides (per-host PATH, work tools, secrets) — not tracked.
+# Kept before the tmux auto-attach block below so it always runs.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# fetch+prune, then force-delete local branches whose upstream is gone (merged/closed PRs)
+alias gbclean='gfa && gbgD'
+
+#Auto-attach on shell launch. for tmux
+if command -v tmux >/dev/null 2>&1 \
+   && [ -z "$TMUX" ] \
+   && [[ $- == *i* ]] \
+   && [ "$TERM_PROGRAM" != "vscode" ] \
+   && [[ ! "$TERM" =~ (screen|tmux) ]]; then
+  tmux new-session -A -s main && exit
+fi

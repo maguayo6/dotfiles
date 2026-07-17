@@ -1,0 +1,8 @@
+# machine-local, untracked overrides (identity, secrets, per-host PATH)
+*.local
+
+# backups created by bootstrap.sh when adopting a pre-existing config
+.dotfiles-backup/
+
+# font archive left behind by the old fonts.sh
+*.zip

@@ -1,3 +1,6 @@
-[user]
-	name = Michael A.
-	email = 
+# Shared git config (tracked). Personal identity lives in ~/.gitconfig.local
+# (git-ignored; scaffolded by bootstrap.sh) and is pulled in via the include below.
+[include]
+	path = ~/.gitconfig.local
+[init]
+	defaultBranch = main
