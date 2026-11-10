@@ -79,6 +79,7 @@ HIST_STAMPS="mm/dd/yyyy"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
+    cleanbranches
     zsh-autosuggestions
     zsh-syntax-highlighting
     you-should-use
@@ -119,6 +120,14 @@ alias zshconfig='${EDITOR:-code} ~/.zshrc'
 alias ohmyzsh='${EDITOR:-code} ~/.oh-my-zsh'
 alias zshp10k='${EDITOR:-code} ~/.p10k.zsh'
 alias bashconfig='${EDITOR:-code} ~/.bashrc'
+alias tmuxconfig='${EDITOR:-code} ~/.tmux.conf'
+
+# tmux
+alias tm='tmux new-session -A -s main'   # attach to "main", or create it
+alias to='tmux new-session -A -s'        # to <name>: attach to <name>, or create it
+alias ta='tmux attach -t'                # ta <name>: attach to an existing session
+alias tl='tmux list-sessions'            # list sessions
+alias tks='tmux kill-session -t'         # tks <name>: kill one session
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -127,7 +136,6 @@ export LS_COLORS=$LS_COLORS:'ow=4;34';
 export PATH=$HOME/.local/bin:$PATH
 
 # machine-local overrides (per-host PATH, work tools, secrets) — not tracked.
-# Kept before the tmux auto-attach block below so it always runs.
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 export NVM_DIR="$HOME/.nvm"
@@ -136,12 +144,3 @@ export NVM_DIR="$HOME/.nvm"
 
 # fetch+prune, then force-delete local branches whose upstream is gone (merged/closed PRs)
 alias gbclean='gfa && gbgD'
-
-#Auto-attach on shell launch. for tmux
-if command -v tmux >/dev/null 2>&1 \
-   && [ -z "$TMUX" ] \
-   && [[ $- == *i* ]] \
-   && [ "$TERM_PROGRAM" != "vscode" ] \
-   && [[ ! "$TERM" =~ (screen|tmux) ]]; then
-  tmux new-session -A -s main && exit
-fi
