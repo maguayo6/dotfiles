@@ -128,6 +128,7 @@ alias to='tmux new-session -A -s'        # to <name>: attach to <name>, or creat
 alias ta='tmux attach -t'                # ta <name>: attach to an existing session
 alias tl='tmux list-sessions'            # list sessions
 alias tks='tmux kill-session -t'         # tks <name>: kill one session
+alias tmux-theme='~/.config/tmux/tmux-theme'  # tmux-theme [<name>]: list, or switch theme (also prefix + T)
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

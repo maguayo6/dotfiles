@@ -69,8 +69,8 @@ for you.)
 ## tmux themes
 
 Themes are `tmux/.config/tmux/themes/<name>.conf` (stowed to `~/.config/tmux/themes`).
-Press **`prefix + T`** for a picker, or run `~/.config/tmux/tmux-theme [<name>]`
-(no name lists them). The pick is stored per machine as the symlink
+Press **`prefix + T`** for a picker, or run `tmux-theme [<name>]` (a zsh alias for
+`~/.config/tmux/tmux-theme`; no name lists them). The pick is stored per machine as the symlink
 `~/.local/state/tmux/theme.conf`; with no pick, `~/.tmux.conf` falls back to Ayu Mirage.
 
 To add a theme, copy an existing file and change the colors. Every theme must set the
