@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# List or switch tmux themes.
+#
+#   tmux-theme                  list themes, active one marked with *
+#   tmux-theme <name>           make themes/<name>.conf active and reload tmux
+#   tmux-theme --menu <client>  show a theme menu on <client> (prefix + T)
+#
+# A theme is any themes/*.conf next to this script. The active one is the
+# machine-local symlink $STATE_LINK, which ~/.tmux.conf sources (falling back
+# to its own default when the link is missing).
+set -euo pipefail
+
+THEME_DIR="$HOME/.config/tmux/themes"
+STATE_LINK="$HOME/.local/state/tmux/theme.conf"
+SELF="$HOME/.config/tmux/tmux-theme"
+
+list_themes() {
+  local file
+  for file in "$THEME_DIR"/*.conf; do
+    basename "$file" .conf
+  done
+}
+
+active_theme() {
+  if [ -L "$STATE_LINK" ]; then
+    basename "$(readlink "$STATE_LINK")" .conf
+  fi
+}
+
+print_themes() {
+  local active name
+  active="$(active_theme)"
+  for name in $(list_themes); do
+    if [ "$name" = "$active" ]; then
+      echo "* $name"
+    else
+      echo "  $name"
+    fi
+  done
+}
+
+# Reloads all of ~/.tmux.conf, not just the theme file: tmux-continuum
+# prepends its autosave hook to status-right when TPM loads it, and a theme
+# file overwrites status-right, so only a full reload restores the hook.
+set_theme() {
+  local name="$1"
+  local file="$THEME_DIR/$name.conf"
+  if [ ! -f "$file" ]; then
+    echo "tmux-theme: no theme named '$name'. Available:" >&2
+    print_themes >&2
+    exit 1
+  fi
+  mkdir -p "$(dirname "$STATE_LINK")"
+  ln -sfn "$file" "$STATE_LINK"
+  if tmux list-sessions >/dev/null 2>&1; then
+    tmux source-file "$HOME/.tmux.conf"
+  fi
+}
+
+show_menu() {
+  local client="$1"
+  local active name label key
+  local index=1
+  local menu_args=(-c "$client" -T " theme " -x C -y C)
+  active="$(active_theme)"
+  for name in $(list_themes); do
+    label="$name"
+    if [ "$name" = "$active" ]; then
+      label="$name *"
+    fi
+    key=""
+    if [ "$index" -le 9 ]; then
+      key="$index"
+    fi
+    menu_args+=("$label" "$key" "run-shell '$SELF $name'")
+    index=$((index + 1))
+  done
+  tmux display-menu "${menu_args[@]}"
+}
+
+case "${1:-}" in
+  "")     print_themes ;;
+  --menu) show_menu "${2:?usage: tmux-theme --menu <client>}" ;;
+  -h|--help) sed -n '2,6s/^# \{0,1\}//p' "$0" ;;
+  *)      set_theme "$1" ;;
+esac

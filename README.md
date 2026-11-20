@@ -66,6 +66,16 @@ Set your terminal emulator's font to **“MesloLGS Nerd Font”** so the powerli
 glyphs in the prompt and tmux status bar render. (The font file itself is installed
 for you.)
 
+## tmux themes
+
+Themes are `tmux/.config/tmux/themes/<name>.conf` (stowed to `~/.config/tmux/themes`).
+Press **`prefix + T`** for a picker, or run `~/.config/tmux/tmux-theme [<name>]`
+(no name lists them). The pick is stored per machine as the symlink
+`~/.local/state/tmux/theme.conf`; with no pick, `~/.tmux.conf` falls back to Ayu Mirage.
+
+To add a theme, copy an existing file and change the colors. Every theme must set the
+same options, since switching layers one theme over the previous one.
+
 ## Layout
 
 ```
